@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from backend.api.health import router as health_router
+
 app = FastAPI()
 
 
@@ -7,6 +9,5 @@ app = FastAPI()
 def read_root():
     return {"message": "AI Crypto Copilot API is running"}
 
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
+
+app.include_router(health_router)
