@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 
 from backend.api.health import router as health_router
+from backend.core.config import APP_NAME, API_VERSION, API_DESCRIPTION
 
 app = FastAPI(
-    title="AI Crypto Copilot API",
-    description="Backend API for AI Crypto Copilot.",
-    version="0.0.1",
+    title=APP_NAME,
+    description=API_DESCRIPTION,
+    version=API_VERSION,
 )
 
 
