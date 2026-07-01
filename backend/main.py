@@ -2,7 +2,11 @@ from fastapi import FastAPI
 
 from backend.api.health import router as health_router
 
-app = FastAPI()
+app = FastAPI(
+    title="AI Crypto Copilot API",
+    description="Backend API for AI Crypto Copilot.",
+    version="0.0.1",
+)
 
 
 @app.get("/")
