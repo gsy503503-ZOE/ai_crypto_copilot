@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from backend.api.deps import get_db
+from backend.api.deps import get_current_user, get_db
 from backend.core.security import create_access_token, get_password_hash, verify_password
 from backend.models.user import User
 from backend.schemas.auth import UserCreate, UserLogin
@@ -46,4 +46,12 @@ def login_user(user_data: UserLogin, db: Session = Depends(get_db)):
     return {
         "access_token": access_token,
         "token_type": "bearer",
+    }
+
+@router.get("/me")
+def read_current_user(current_user: User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "is_active": current_user.is_active,
     }
