@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from backend.api.deps import get_db
-from backend.core.security import get_password_hash, verify_password
+from backend.core.security import create_access_token, get_password_hash, verify_password
 from backend.models.user import User
 from backend.schemas.auth import UserCreate, UserLogin
 
@@ -41,8 +41,9 @@ def login_user(user_data: UserLogin, db: Session = Depends(get_db)):
     if not verify_password(user_data.password, existing_user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
+    access_token = create_access_token(data={"sub": existing_user.email})
+
     return {
-        "message": "Login successful",
-        "user_id": existing_user.id,
-        "email": existing_user.email,
+        "access_token": access_token,
+        "token_type": "bearer",
     }
