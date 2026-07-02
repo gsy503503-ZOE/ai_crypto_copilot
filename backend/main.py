@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-
 from backend.api.health import router as health_router
 from backend.core.config import APP_NAME, API_VERSION, API_DESCRIPTION
+from backend.api.auth import router as auth_router
 
 app = FastAPI(
     title=APP_NAME,
@@ -16,3 +16,4 @@ def read_root():
 
 
 app.include_router(health_router)
+app.include_router(auth_router)
