@@ -1,14 +1,17 @@
 from fastapi import APIRouter, HTTPException
+
+from backend.schemas.market import Coin, CoinPrice
 from backend.services.market_service import get_coin_price, get_supported_coins
 
 router = APIRouter(prefix="/market", tags=["market"])
 
 
-@router.get("/coins")
+@router.get("/coins", response_model=dict[str, list[Coin]])
 def list_coins():
     return {"coins": get_supported_coins()}
 
-@router.get("/coins/{symbol}/price")
+
+@router.get("/coins/{symbol}/price", response_model=CoinPrice)
 def get_price(symbol: str):
     coin_price = get_coin_price(symbol)
 
