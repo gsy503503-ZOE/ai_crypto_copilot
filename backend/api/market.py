@@ -1,14 +1,10 @@
 from fastapi import APIRouter
 
+from backend.services.market_service import get_supported_coins
+
 router = APIRouter(prefix="/market", tags=["market"])
 
 
 @router.get("/coins")
 def list_coins():
-    return {
-        "coins": [
-            {"symbol": "BTC", "name": "Bitcoin"},
-            {"symbol": "ETH", "name": "Ethereum"},
-            {"symbol": "SOL", "name": "Solana"},
-        ]
-    }
+    return {"coins": get_supported_coins()}
