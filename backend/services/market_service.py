@@ -19,6 +19,8 @@ def get_real_coin_price(symbol: str):
         return {
             "symbol": symbol_upper,
             "price_usd": data[coin_id]["usd"],
+            "change_24h": data[coin_id]["usd_24h_change"],
+            "last_updated_at": data[coin_id]["last_updated_at"],
             "source": "coingecko",
         }
     except Exception:
@@ -50,5 +52,7 @@ def get_coin_price(symbol: str):
     return {
         "symbol": data["symbol"],
         "price_usd": data["price_usd"],
+        "change_24h": None,
+        "last_updated_at": None,
         "source": "mock",
     }

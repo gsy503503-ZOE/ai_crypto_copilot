@@ -9,6 +9,8 @@ def get_simple_price(coin_id: str, vs_currency: str = "usd"):
     params = {
         "ids": coin_id,
         "vs_currencies": vs_currency,
+        "include_24hr_change": "true",
+        "include_last_updated_at": "true",
     }
 
     response = httpx.get(url, params=params, timeout=10)
