@@ -9,3 +9,4 @@ class Coin(BaseModel):
 class CoinPrice(BaseModel):
     symbol: str
     price_usd: float
+    source: str
