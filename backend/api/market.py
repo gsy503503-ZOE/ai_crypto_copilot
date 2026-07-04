@@ -1,7 +1,13 @@
 from fastapi import APIRouter, HTTPException
 
 from backend.schemas.market import Coin, CoinPrice
-from backend.services.market_service import get_real_coin_price, get_supported_coins
+from backend.services.market_service import (
+    get_market_summary,
+    get_real_coin_price,
+    get_supported_coins,
+)
+
+from typing import List
 
 router = APIRouter(prefix="/market", tags=["market"])
 
@@ -19,3 +25,7 @@ def get_price(symbol: str):
         raise HTTPException(status_code=404, detail="Coin not found")
 
     return coin_price
+
+@router.get("/summary", response_model=list[CoinPrice])
+def get_summary():
+    return get_market_summary()

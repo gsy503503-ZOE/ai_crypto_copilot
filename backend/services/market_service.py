@@ -56,3 +56,11 @@ def get_coin_price(symbol: str):
         "last_updated_at": None,
         "source": "mock",
     }
+
+def get_market_summary():
+    symbols = ["BTC", "ETH", "SOL"]
+
+    return [
+        get_real_coin_price(symbol)
+        for symbol in symbols
+    ]
