@@ -17,15 +17,17 @@ Build a practical AI product that helps users analyze crypto market data, wallet
 
 ## Current Status
 
-Sprint 0 is in progress.
+v0.2 is complete.
 
 Completed:
 
-- Initialized GitHub repository
-- Created FastAPI backend entrypoint
-- Added health check endpoint
-- Organized backend API routes
-- Added FastAPI project metadata
+- FastAPI backend foundation
+- User authentication with JWT
+- Crypto market data endpoints via CoinGecko
+- Redis caching with in-memory fallback
+- Docker Compose setup
+- GitHub Actions CI
+- Environment-based configuration
 
 ## Setup Instructions
 
@@ -49,13 +51,37 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Run the backend server
+### 4. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+### 5. Initialize the database
+
+```bash
+python -m backend.db.init_db
+```
+
+### 6. Run the backend server
 
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-### 5. Open the API
+### 7. Run tests
+
+```bash
+pytest -q
+```
+
+### 8. Run with Docker Compose
+
+```bash
+docker compose up --build
+```
+
+## API Endpoints
 
 Root endpoint:
 
@@ -67,6 +93,22 @@ Health check:
 
 ```text
 http://127.0.0.1:8000/health
+```
+
+Auth:
+
+```text
+POST /auth/register
+POST /auth/login
+GET  /auth/me
+```
+
+Market data:
+
+```text
+GET /v1/market/price/bitcoin
+GET /v1/market/prices?ids=bitcoin,ethereum
+GET /v1/market/trending
 ```
 
 API docs:
