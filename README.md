@@ -82,3 +82,13 @@ http://127.0.0.1:8000/docs
 - v0.2 Crypto market data
 - v0.3 Wallet analysis
 - v0.4 AI research assistant
+
+## Current Features
+
+- User registration and login
+- Password hashing with Passlib and bcrypt
+- JWT access token authentication
+- Protected current user endpoint
+- Crypto coin list endpoint
+- Real-time coin price lookup with CoinGecko
+- Market summary endpoint for BTC, ETH, and SOL
