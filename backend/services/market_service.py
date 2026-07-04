@@ -59,8 +59,12 @@ def get_coin_price(symbol: str):
 
 def get_market_summary():
     symbols = ["BTC", "ETH", "SOL"]
+    summary = []
 
-    return [
-        get_real_coin_price(symbol)
-        for symbol in symbols
-    ]
+    for symbol in symbols:
+        coin_price = get_real_coin_price(symbol)
+
+        if coin_price is not None:
+            summary.append(coin_price)
+
+    return summary
