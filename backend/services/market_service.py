@@ -44,11 +44,11 @@ def get_supported_coins():
 
 
 def get_coin_price(symbol: str):
-    return MOCK_MARKET_DATA.get(symbol.upper())
+    data = MOCK_MARKET_DATA.get(symbol.upper())
 
     if data is None:
         return None
-    
+
     return {
         "symbol": data["symbol"],
         "price_usd": data["price_usd"],
