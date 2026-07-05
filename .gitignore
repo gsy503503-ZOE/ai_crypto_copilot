@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .DS_Store
 *.db
+# Personal notes
+docs/*.docx
+docs/~$*.docx
