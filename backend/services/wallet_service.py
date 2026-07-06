@@ -29,14 +29,14 @@ def calculate_risk_level(suspicious_transactions: int) -> str:
 
     return "low"
 
-def calculate_risk_score(total_transactions: int, suspicious_transactions: int) -> int:
-    if total_transactions == 0:
-        return 0
+def calculate_risk_score(suspicious_transactions: int) -> int:
+    if suspicious_transactions >= 10:
+        return 90
 
-    suspicious_ratio = suspicious_transactions / total_transactions
-    score = int(suspicious_ratio * 100)
+    if suspicious_transactions >= 1:
+        return 50
 
-    return min(score, 100)
+    return 5
 
 def calculate_activity_level(total_transactions: int) -> str:
     if total_transactions >= 500:
