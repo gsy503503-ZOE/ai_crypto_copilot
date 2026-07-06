@@ -8,9 +8,9 @@ Build a practical AI product that helps users analyze crypto market data, wallet
 
 ## Current Status
 
-Current version: v0.3.0 in progress
+Current release: `v0.3.0`
 
-Sprint 3 focuses on wallet analysis. The backend can now validate EVM wallet addresses, return mock wallet analysis, calculate wallet risk signals, and generate readable wallet insights.
+Sprint 3 added the wallet analysis foundation. The backend can now validate EVM wallet addresses, return mock wallet analysis, calculate wallet risk signals, and generate readable wallet insights.
 
 Completed:
 
@@ -112,7 +112,7 @@ http://127.0.0.1:8000/docs
 - v0.0.1 Backend foundation - completed
 - v0.1.0 User authentication - completed
 - v0.2.0 Crypto market data - completed
-- v0.3.0 Wallet analysis - in progress
+- v0.3.0 Wallet analysis - completed
 - v0.4.0 AI research assistant - planned
 
 ## Current Features

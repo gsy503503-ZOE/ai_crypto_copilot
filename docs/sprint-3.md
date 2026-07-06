@@ -75,3 +75,19 @@ activity_level describes how active a wallet is.
 insights turn raw data into readable analysis.
 smoke tests quickly check whether important functions still work.
 assert can be used for simple automated checks.
+
+## English Vocabulary
+
+- wallet: 钱包
+- analyze: 分析
+- validation: 校验
+- EVM: Ethereum Virtual Machine, 以太坊虚拟机
+- mock data: 模拟数据
+- risk level: 风险等级
+- risk score: 风险分数
+- activity level: 活跃度等级
+- insight: 洞察，分析结论
+- suspicious transaction: 可疑交易
+- timestamp: 时间戳
+- smoke test: 冒烟测试，快速基础检查
+- assert: 断言
