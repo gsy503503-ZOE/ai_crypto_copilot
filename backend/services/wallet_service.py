@@ -59,7 +59,12 @@ def analyze_wallet(address: str):
     risk_level = calculate_risk_level(suspicious_transactions)
     risk_score = calculate_risk_score(total_transactions, suspicious_transactions)
     activity_level = calculate_activity_level(total_transactions)
-    insights = build_wallet_insights(total_transactions, suspicious_transactions)
+    insights = build_wallet_insights(
+        total_transactions,
+        suspicious_transactions,
+        risk_level,
+        activity_level,
+    )
 
     return {
         "address": address,
@@ -70,26 +75,46 @@ def analyze_wallet(address: str):
         "insights": insights,
     }
 
-def build_wallet_insights(total_transactions: int, suspicious_transactions: int):
+def build_wallet_insights(
+    total_transactions: int,
+    suspicious_transactions: int,
+    risk_level: str,
+    activity_level: str,
+):
     insights = [
         {
             "title": "Transaction activity",
-            "description": f"This wallet has {total_transactions} transactions.",
+            "description": f"This wallet has {total_transactions} transactions and shows {activity_level} activity.",
         }
     ]
 
-    if suspicious_transactions > 0:
+    if risk_level == "high":
         insights.append(
             {
-                "title": "Risk signal",
-                "description": f"This wallet has {suspicious_transactions} suspicious transactions.",
+                "title": "High risk signal",
+                "description": "This wallet has multiple suspicious transactions and should be reviewed carefully.",
+            }
+        )
+    elif risk_level == "medium":
+        insights.append(
+            {
+                "title": "Medium risk signal",
+                "description": "This wallet has some suspicious activity and may need additional review.",
             }
         )
     else:
         insights.append(
             {
-                "title": "No obvious risk detected",
-                "description": "No suspicious transactions were found in the mock analysis.",
+                "title": "Low risk signal",
+                "description": "No obvious suspicious pattern was found in the mock analysis.",
+            }
+        )
+
+    if suspicious_transactions > 0:
+        insights.append(
+            {
+                "title": "Suspicious transactions",
+                "description": f"This wallet has {suspicious_transactions} suspicious transactions.",
             }
         )
 
