@@ -7,12 +7,12 @@ from backend.services.market_service import (
     get_supported_coins,
 )
 
-from typing import List
+from typing import Dict, List
 
 router = APIRouter(prefix="/market", tags=["market"])
 
 
-@router.get("/coins", response_model=dict[str, list[Coin]])
+@router.get("/coins", response_model=Dict[str, List[Coin]])
 def list_coins():
     return {"coins": get_supported_coins()}
 
@@ -26,6 +26,6 @@ def get_price(symbol: str):
 
     return coin_price
 
-@router.get("/summary", response_model=list[CoinPrice])
+@router.get("/summary", response_model=List[CoinPrice])
 def get_summary():
     return get_market_summary()
