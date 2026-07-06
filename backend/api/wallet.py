@@ -12,7 +12,9 @@ def wallet_ping():
 
 @router.post("/analyze", response_model=WalletAnalyzeResponse)
 def analyze_wallet_endpoint(request: WalletAnalyzeRequest):
-    if not is_valid_evm_address(request.address):
+    normalized_address = request.address.strip()
+
+    if not is_valid_evm_address(normalized_address):
         raise HTTPException(status_code=400, detail="Invalid wallet address")
 
-    return analyze_wallet(request.address)
+    return analyze_wallet(normalized_address)
