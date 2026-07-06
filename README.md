@@ -17,15 +17,19 @@ Build a practical AI product that helps users analyze crypto market data, wallet
 
 ## Current Status
 
-Sprint 0 is in progress.
+Current release: `v0.2.0`
 
 Completed:
 
-- Initialized GitHub repository
-- Created FastAPI backend entrypoint
-- Added health check endpoint
-- Organized backend API routes
-- Added FastAPI project metadata
+- Backend foundation with FastAPI
+- User registration and login
+- Password hashing with Passlib and bcrypt
+- JWT access token authentication
+- Protected current user endpoint
+- Crypto market data endpoints
+- Real market price lookup with CoinGecko
+- Market summary endpoint
+- Sprint documentation and GitHub releases
 
 ## Setup Instructions
 
@@ -77,11 +81,11 @@ http://127.0.0.1:8000/docs
 
 ## Roadmap
 
-- v0.0.1 Backend foundation
-- v0.1 User authentication
-- v0.2 Crypto market data
-- v0.3 Wallet analysis
-- v0.4 AI research assistant
+- v0.0.1 Backend foundation - completed
+- v0.1.0 User authentication - completed
+- v0.2.0 Crypto market data - completed
+- v0.3.0 Wallet analysis - planned
+- v0.4.0 AI research assistant - planned
 
 ## Current Features
 
