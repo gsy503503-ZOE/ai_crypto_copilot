@@ -1,0 +1,19 @@
+from typing import List
+
+from pydantic import BaseModel
+
+
+class WalletAnalyzeRequest(BaseModel):
+    address: str
+
+
+class WalletInsight(BaseModel):
+    title: str
+    description: str
+
+
+class WalletAnalyzeResponse(BaseModel):
+    address: str
+    risk_level: str
+    total_transactions: int
+    insights: List[WalletInsight]
