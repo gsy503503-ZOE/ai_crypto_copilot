@@ -27,6 +27,14 @@ def calculate_risk_level(suspicious_transactions: int) -> str:
 
     return "low"
 
+def calculate_risk_score(total_transactions: int, suspicious_transactions: int) -> int:
+    if total_transactions == 0:
+        return 0
+
+    suspicious_ratio = suspicious_transactions / total_transactions
+    score = int(suspicious_ratio * 100)
+
+    return min(score, 100)
 
 def analyze_wallet(address: str):
     wallet_data = MOCK_WALLET_DATA.get(
@@ -40,11 +48,13 @@ def analyze_wallet(address: str):
     total_transactions = wallet_data["total_transactions"]
     suspicious_transactions = wallet_data["suspicious_transactions"]
     risk_level = calculate_risk_level(suspicious_transactions)
+    risk_score = calculate_risk_score(total_transactions, suspicious_transactions)
     insights = build_wallet_insights(total_transactions, suspicious_transactions)
 
     return {
         "address": address,
         "risk_level": risk_level,
+        "risk_score": risk_score,
         "total_transactions": total_transactions,
         "insights": insights,
     }

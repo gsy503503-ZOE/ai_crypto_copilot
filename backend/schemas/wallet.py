@@ -15,5 +15,6 @@ class WalletInsight(BaseModel):
 class WalletAnalyzeResponse(BaseModel):
     address: str
     risk_level: str
+    risk_score: int
     total_transactions: int
     insights: List[WalletInsight]
