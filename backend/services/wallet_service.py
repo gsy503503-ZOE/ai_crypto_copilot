@@ -1,5 +1,7 @@
 import re
 
+from datetime import datetime
+
 
 MOCK_WALLET_DATA = {
     "0x742d35Cc6634C0532925a3b844Bc454e4438f44e": {
@@ -73,6 +75,7 @@ def analyze_wallet(address: str):
         "activity_level": activity_level,
         "total_transactions": total_transactions,
         "insights": insights,
+        "analyzed_at": datetime.utcnow().isoformat(),
     }
 
 def build_wallet_insights(

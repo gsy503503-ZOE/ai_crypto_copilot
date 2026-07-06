@@ -18,4 +18,5 @@ class WalletAnalyzeResponse(BaseModel):
     risk_score: int
     activity_level: str
     total_transactions: int
+    analyzed_at: str
     insights: List[WalletInsight]
