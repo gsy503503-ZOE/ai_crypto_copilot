@@ -37,20 +37,39 @@ def analyze_wallet(address: str):
         },
     )
 
-    risk_level = calculate_risk_level(wallet_data["suspicious_transactions"])
+    total_transactions = wallet_data["total_transactions"]
+    suspicious_transactions = wallet_data["suspicious_transactions"]
+    risk_level = calculate_risk_level(suspicious_transactions)
+    insights = build_wallet_insights(total_transactions, suspicious_transactions)
 
     return {
         "address": address,
         "risk_level": risk_level,
-        "total_transactions": wallet_data["total_transactions"],
-        "insights": [
-            {
-                "title": "Transaction activity",
-                "description": f"This wallet has {wallet_data['total_transactions']} transactions.",
-            },
+        "total_transactions": total_transactions,
+        "insights": insights,
+    }
+
+def build_wallet_insights(total_transactions: int, suspicious_transactions: int):
+    insights = [
+        {
+            "title": "Transaction activity",
+            "description": f"This wallet has {total_transactions} transactions.",
+        }
+    ]
+
+    if suspicious_transactions > 0:
+        insights.append(
             {
                 "title": "Risk signal",
-                "description": f"This wallet has {wallet_data['suspicious_transactions']} suspicious transactions.",
-            },
-        ],
-    }
+                "description": f"This wallet has {suspicious_transactions} suspicious transactions.",
+            }
+        )
+    else:
+        insights.append(
+            {
+                "title": "No obvious risk detected",
+                "description": "No suspicious transactions were found in the mock analysis.",
+            }
+        )
+
+    return insights
