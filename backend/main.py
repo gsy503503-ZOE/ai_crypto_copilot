@@ -4,6 +4,7 @@ from backend.core.config import APP_NAME, API_VERSION, API_DESCRIPTION
 from backend.api.auth import router as auth_router
 from backend.api.market import router as market_router
 from backend.api.wallet import router as wallet_router
+from backend.api.transactions import router as transactions_router
 
 app = FastAPI(
     title=APP_NAME,
@@ -21,3 +22,4 @@ app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(market_router)
 app.include_router(wallet_router)
+app.include_router(transactions_router)
