@@ -14,6 +14,11 @@ class TransactionCreate(BaseModel):
     timestamp: Optional[str] = None
     note: Optional[str] = None
 
+class TransactionNoteUpdate(BaseModel):
+    note: str
+
+class TransactionCategoryUpdate(BaseModel):
+    category: str
 
 class TransactionResponse(BaseModel):
     id: int

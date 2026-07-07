@@ -5,7 +5,12 @@ from sqlalchemy.orm import Session
 
 from backend.api.deps import get_db
 from backend.models.transaction import Transaction
-from backend.schemas.transaction import TransactionCreate, TransactionResponse
+from backend.schemas.transaction import (
+    TransactionCategoryUpdate,
+    TransactionCreate,
+    TransactionNoteUpdate,
+    TransactionResponse,
+)
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
@@ -43,6 +48,40 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
 
     if transaction is None:
         raise HTTPException(status_code=404, detail="Transaction not found")
+
+    return transaction
+
+@router.patch("/{transaction_id}/note", response_model=TransactionResponse)
+def update_transaction_note(
+    transaction_id: int,
+    note_data: TransactionNoteUpdate,
+    db: Session = Depends(get_db),
+):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+    if transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    transaction.note = note_data.note
+    db.commit()
+    db.refresh(transaction)
+
+    return transaction
+
+@router.patch("/{transaction_id}/category", response_model=TransactionResponse)
+def update_transaction_category(
+    transaction_id: int,
+    category_data: TransactionCategoryUpdate,
+    db: Session = Depends(get_db),
+):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+    if transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    transaction.category = category_data.category
+    db.commit()
+    db.refresh(transaction)
 
     return transaction
 
