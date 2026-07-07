@@ -43,8 +43,20 @@ def list_transactions(
     return query.all()
 
 @router.get("/summary")
-def get_transaction_summary(db: Session = Depends(get_db)):
-    transactions = db.query(Transaction).all()
+def get_transaction_summary(
+    wallet_address: Optional[str] = None,
+    category: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    query = db.query(Transaction)
+
+    if wallet_address:
+        query = query.filter(Transaction.wallet_address == wallet_address)
+
+    if category:
+        query = query.filter(Transaction.category == category)
+
+    transactions = query.all()
 
     total_value_usd = 0
     categories = {}
@@ -53,13 +65,15 @@ def get_transaction_summary(db: Session = Depends(get_db)):
         if transaction.value_usd:
             total_value_usd = total_value_usd + transaction.value_usd
 
-        category = transaction.category
-        if category not in categories:
-            categories[category] = 0
+        category_name = transaction.category
+        if category_name not in categories:
+            categories[category_name] = 0
 
-        categories[category] = categories[category] + 1
+        categories[category_name] = categories[category_name] + 1
 
     return {
+        "wallet_address": wallet_address,
+        "category": category,
         "total_transactions": len(transactions),
         "total_value_usd": total_value_usd,
         "categories": categories,
