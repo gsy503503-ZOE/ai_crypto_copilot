@@ -12,12 +12,33 @@ from backend.schemas.transaction import (
     TransactionResponse,
 )
 
+ALLOWED_CATEGORIES = {
+    "transfer",
+    "swap",
+    "fee",
+    "airdrop",
+    "staking_reward",
+    "bridge",
+    "unknown",
+}
+
+def normalize_category(category: str) -> str:
+    normalized_category = category.strip().lower()
+
+    if normalized_category not in ALLOWED_CATEGORIES:
+        raise HTTPException(status_code=400, detail="Invalid transaction category")
+
+    return normalized_category
+
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
 
 @router.post("", response_model=TransactionResponse)
 def create_transaction(transaction_data: TransactionCreate, db: Session = Depends(get_db)):
-    new_transaction = Transaction(**transaction_data.model_dump())
+    transaction_dict = transaction_data.model_dump()
+    transaction_dict["category"] = normalize_category(transaction_dict["category"])
+
+    new_transaction = Transaction(**transaction_dict)
 
     db.add(new_transaction)
     db.commit()
@@ -116,7 +137,7 @@ def update_transaction_category(
     if transaction is None:
         raise HTTPException(status_code=404, detail="Transaction not found")
 
-    transaction.category = category_data.category
+    transaction.category = normalize_category(category_data.category)
     db.commit()
     db.refresh(transaction)
 
