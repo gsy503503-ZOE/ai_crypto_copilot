@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -22,5 +22,13 @@ def create_transaction(transaction_data: TransactionCreate, db: Session = Depend
 
 
 @router.get("", response_model=List[TransactionResponse])
-def list_transactions(db: Session = Depends(get_db)):
-    return db.query(Transaction).all()
+def list_transactions(
+    wallet_address: Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    query = db.query(Transaction)
+
+    if wallet_address:
+        query = query.filter(Transaction.wallet_address == wallet_address)
+
+    return query.all()
