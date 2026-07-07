@@ -1,6 +1,7 @@
 from backend.db.base import Base
 from backend.db.session import engine
 from backend.models.user import User
+from backend.models.transaction import Transaction
 
 
 def init_db():
