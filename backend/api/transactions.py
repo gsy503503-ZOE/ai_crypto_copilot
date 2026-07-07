@@ -42,6 +42,29 @@ def list_transactions(
 
     return query.all()
 
+@router.get("/summary")
+def get_transaction_summary(db: Session = Depends(get_db)):
+    transactions = db.query(Transaction).all()
+
+    total_value_usd = 0
+    categories = {}
+
+    for transaction in transactions:
+        if transaction.value_usd:
+            total_value_usd = total_value_usd + transaction.value_usd
+
+        category = transaction.category
+        if category not in categories:
+            categories[category] = 0
+
+        categories[category] = categories[category] + 1
+
+    return {
+        "total_transactions": len(transactions),
+        "total_value_usd": total_value_usd,
+        "categories": categories,
+    }
+
 @router.get("/{transaction_id}", response_model=TransactionResponse)
 def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
     transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
