@@ -64,11 +64,15 @@ def get_transaction_summary(
     transactions = query.all()
 
     total_value_usd = 0
+    total_amount = 0
     categories = {}
 
     for transaction in transactions:
         if transaction.value_usd:
             total_value_usd = total_value_usd + transaction.value_usd
+        
+        if transaction.amount:
+            total_amount = total_amount + transaction.amount
 
         category_name = transaction.category
         if category_name not in categories:
@@ -85,6 +89,7 @@ def get_transaction_summary(
         "wallet_address": wallet_address,
         "category": category,
         "total_transactions": len(transactions),
+        "total_amount": total_amount,
         "total_value_usd": total_value_usd,
         "average_value_usd": average_value_usd,
         "categories": categories,
