@@ -1,16 +1,22 @@
-# AI Crypto Copilot
+# AI Crypto Ledger Copilot
 
-AI Crypto Copilot is an AI-powered research assistant for crypto investors and builders.
+AI Crypto Ledger Copilot is a backend project for organizing, analyzing, and explaining crypto wallet activity.
+
+This project started as AI Crypto Copilot, a broader crypto research assistant. After several sprints, the product direction became clearer: the core use case is a crypto transaction ledger copilot that helps users understand wallet activity, transaction records, labels, and summary metrics.
 
 ## Goal
 
-Build a practical AI product that helps users analyze crypto market data, wallet activity, news, and portfolio signals.
+Build a practical backend system that helps users collect, label, filter, summarize, and eventually explain crypto wallet transactions.
+
+The long-term goal is to build an AI-assisted ledger product for crypto users, builders, analysts, and remote backend engineering portfolio review.
 
 ## Current Status
 
-Current release: `v0.3.0`
+Current release: `v0.4.0`
 
-Sprint 3 added the wallet analysis foundation. The backend can now validate EVM wallet addresses, return mock wallet analysis, calculate wallet risk signals, and generate readable wallet insights.
+Current development: `Sprint 4 - Transaction Ledger Foundation completed`
+
+Sprint 4 adds the transaction ledger foundation. The backend can now create, list, filter, update, delete, and summarize wallet transaction records.
 
 Completed:
 
@@ -27,8 +33,30 @@ Completed:
 - Wallet risk level and risk score calculation
 - Wallet activity level detection
 - Wallet insight generation
-- Wallet service smoke checks
+- Transaction ledger model
+- Transaction creation and listing
+- Transaction filtering by wallet address and category
+- Transaction detail lookup by id
+- Transaction note and category updates
+- Transaction deletion
+- Transaction category validation and normalization
+- Transaction summary metrics
 - Sprint documentation and GitHub releases
+
+## Product Direction
+
+The project is moving from a general crypto copilot toward a transaction ledger copilot.
+
+Instead of focusing on trading advice, the product focuses on a lower-risk and more engineering-oriented problem:
+
+- What happened in this wallet?
+- How should these transactions be organized?
+- Which transactions belong to transfers, swaps, fees, airdrops, staking rewards, or bridges?
+- What is the total wallet activity?
+- What are the useful summary metrics?
+- How can AI later explain transaction history in plain English?
+
+This direction better matches backend engineering roles that require API design, database modeling, authentication, data processing, testing, and production readiness.
 
 ## Tech Stack
 
@@ -52,6 +80,7 @@ Planned:
 - Redis
 - Docker
 - OpenAI API
+- Frontend dashboard
 
 ## Setup Instructions
 
@@ -113,7 +142,13 @@ http://127.0.0.1:8000/docs
 - v0.1.0 User authentication - completed
 - v0.2.0 Crypto market data - completed
 - v0.3.0 Wallet analysis - completed
-- v0.4.0 AI research assistant - planned
+- v0.4.0 Transaction ledger - completed
+- v0.5.0 Transaction labeling - planned
+- v0.6.0 Tests and logging - planned
+- v0.7.0 Background sync - planned
+- v0.8.0 Docker and PostgreSQL - planned
+- v0.9.0 AI transaction explanation - planned
+- v1.0.0 Frontend dashboard - planned
 
 ## Current Features
 
@@ -143,6 +178,21 @@ http://127.0.0.1:8000/docs
 - Human-readable wallet insights
 - Analysis timestamp
 
+### Transaction Ledger
+
+- Transaction creation
+- Transaction listing
+- Transaction lookup by id
+- Transaction deletion
+- Transaction note update
+- Transaction category update
+- Wallet address filtering
+- Category filtering
+- Category validation
+- Category normalization
+- Transaction summary metrics
+- Empty state response for filtered summary results
+
 ## API Endpoints
 
 ### Health
@@ -166,6 +216,50 @@ http://127.0.0.1:8000/docs
 
 - `GET /wallet/ping`
 - `POST /wallet/analyze`
+
+### Transactions
+
+- `POST /transactions`
+- `GET /transactions`
+- `GET /transactions/summary`
+- `GET /transactions/{transaction_id}`
+- `PATCH /transactions/{transaction_id}/note`
+- `PATCH /transactions/{transaction_id}/category`
+- `DELETE /transactions/{transaction_id}`
+
+## Example Transaction Request
+
+```json
+{
+  "wallet_address": "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
+  "tx_hash": "0xtesttxhash0003",
+  "chain": "ethereum",
+  "category": "swap",
+  "token_symbol": "USDC",
+  "amount": 100,
+  "value_usd": 100,
+  "timestamp": null,
+  "note": "Test transaction"
+}
+```
+
+## Example Transaction Summary Response
+
+```json
+{
+  "message": "Transaction summary generated successfully",
+  "wallet_address": null,
+  "category": null,
+  "total_transactions": 2,
+  "total_amount": 350.75,
+  "total_value_usd": 350.75,
+  "average_value_usd": 175.38,
+  "largest_transaction_value_usd": 250.75,
+  "categories": {
+    "swap": 2
+  }
+}
+```
 
 ## Example Wallet Analysis Request
 
@@ -204,3 +298,4 @@ http://127.0.0.1:8000/docs
 - [Sprint 1 Review](docs/sprint-1.md)
 - [Sprint 2 Review](docs/sprint-2.md)
 - [Sprint 3 Review](docs/sprint-3.md)
+- [Sprint 4 Review](docs/sprint-4.md)
