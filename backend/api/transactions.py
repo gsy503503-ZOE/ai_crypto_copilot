@@ -93,10 +93,10 @@ def get_transaction_summary(
         "wallet_address": wallet_address,
         "category": category,
         "total_transactions": len(transactions),
-        "total_amount": total_amount,
-        "total_value_usd": total_value_usd,
-        "average_value_usd": average_value_usd,
-        "largest_transaction_value_usd": largest_transaction_value_usd,
+        "total_amount": round(total_amount, 6),
+        "total_value_usd": round(total_value_usd, 2),
+        "average_value_usd": round(average_value_usd, 2),
+        "largest_transaction_value_usd": round(largest_transaction_value_usd, 2),
         "categories": categories,
     }
 
