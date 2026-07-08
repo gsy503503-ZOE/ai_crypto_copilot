@@ -76,11 +76,17 @@ def get_transaction_summary(
 
         categories[category_name] = categories[category_name] + 1
 
+    average_value_usd = 0
+
+    if len(transactions) > 0:
+        average_value_usd = total_value_usd / len(transactions)
+
     return {
         "wallet_address": wallet_address,
         "category": category,
         "total_transactions": len(transactions),
         "total_value_usd": total_value_usd,
+        "average_value_usd": average_value_usd,
         "categories": categories,
     }
 
