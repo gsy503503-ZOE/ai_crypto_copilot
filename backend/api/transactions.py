@@ -12,23 +12,7 @@ from backend.schemas.transaction import (
     TransactionResponse,
 )
 
-ALLOWED_CATEGORIES = {
-    "transfer",
-    "swap",
-    "fee",
-    "airdrop",
-    "staking_reward",
-    "bridge",
-    "unknown",
-}
-
-def normalize_category(category: str) -> str:
-    normalized_category = category.strip().lower()
-
-    if normalized_category not in ALLOWED_CATEGORIES:
-        raise HTTPException(status_code=400, detail="Invalid transaction category")
-
-    return normalized_category
+from backend.services.transaction_service import normalize_category
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
