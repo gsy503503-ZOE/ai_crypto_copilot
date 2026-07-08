@@ -88,8 +88,14 @@ def get_transaction_summary(
 
     if len(transactions) > 0:
         average_value_usd = total_value_usd / len(transactions)
+    
+    message = "Transaction summary generated successfully"
+
+    if len(transactions) == 0:
+        message = "No transactions found for the selected filters"
 
     return {
+        "message": message,
         "wallet_address": wallet_address,
         "category": category,
         "total_transactions": len(transactions),
