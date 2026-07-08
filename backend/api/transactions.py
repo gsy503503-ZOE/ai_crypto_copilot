@@ -65,11 +65,15 @@ def get_transaction_summary(
 
     total_value_usd = 0
     total_amount = 0
+    largest_transaction_value_usd = 0
     categories = {}
 
     for transaction in transactions:
         if transaction.value_usd:
             total_value_usd = total_value_usd + transaction.value_usd
+
+            if transaction.value_usd > largest_transaction_value_usd:
+                largest_transaction_value_usd = transaction.value_usd
         
         if transaction.amount:
             total_amount = total_amount + transaction.amount
@@ -92,6 +96,7 @@ def get_transaction_summary(
         "total_amount": total_amount,
         "total_value_usd": total_value_usd,
         "average_value_usd": average_value_usd,
+        "largest_transaction_value_usd": largest_transaction_value_usd,
         "categories": categories,
     }
 
