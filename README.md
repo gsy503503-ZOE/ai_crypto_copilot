@@ -12,11 +12,13 @@ The long-term goal is to build an AI-assisted ledger product for crypto users, b
 
 ## Current Status
 
-Current release: `v0.4.0`
+Current release: `v0.5.0`
 
-Current development: `Sprint 4 - Transaction Ledger Foundation completed`
+Current development: `Sprint 5 - Transaction Labeling completed`
 
 Sprint 4 adds the transaction ledger foundation. The backend can now create, list, filter, update, delete, and summarize wallet transaction records.
+
+Sprint 5 adds transaction labeling. The backend can now save labels on transactions, validate labels, update labels, filter transactions by label, summarize label distribution, and suggest labels from transaction data.
 
 Completed:
 
@@ -41,6 +43,13 @@ Completed:
 - Transaction deletion
 - Transaction category validation and normalization
 - Transaction summary metrics
+- Transaction labels
+- Transaction label validation and normalization
+- Transaction label update endpoint
+- Transaction label filtering
+- Transaction label summary metrics
+- Transaction label options endpoint
+- Rule-based transaction label suggestions
 - Sprint documentation and GitHub releases
 
 ## Product Direction
@@ -143,7 +152,7 @@ http://127.0.0.1:8000/docs
 - v0.2.0 Crypto market data - completed
 - v0.3.0 Wallet analysis - completed
 - v0.4.0 Transaction ledger - completed
-- v0.5.0 Transaction labeling - planned
+- v0.5.0 Transaction labeling - completed
 - v0.6.0 Tests and logging - planned
 - v0.7.0 Background sync - planned
 - v0.8.0 Docker and PostgreSQL - planned
@@ -193,6 +202,18 @@ http://127.0.0.1:8000/docs
 - Transaction summary metrics
 - Empty state response for filtered summary results
 
+### Transaction Labeling
+
+- Manual transaction labels
+- Allowed label validation
+- Label normalization
+- Duplicate label removal
+- Label suggestions based on category, token, and USD value
+- Label option endpoint
+- Transaction list filtering by label
+- Transaction summary filtering by label
+- Label distribution in summary metrics
+
 ## API Endpoints
 
 ### Health
@@ -222,9 +243,12 @@ http://127.0.0.1:8000/docs
 - `POST /transactions`
 - `GET /transactions`
 - `GET /transactions/summary`
+- `GET /transactions/labels/options`
 - `GET /transactions/{transaction_id}`
 - `PATCH /transactions/{transaction_id}/note`
 - `PATCH /transactions/{transaction_id}/category`
+- `PATCH /transactions/{transaction_id}/labels`
+- `GET /transactions/{transaction_id}/labels/suggestions`
 - `DELETE /transactions/{transaction_id}`
 
 ## Example Transaction Request
@@ -238,8 +262,9 @@ http://127.0.0.1:8000/docs
   "token_symbol": "USDC",
   "amount": 100,
   "value_usd": 100,
-  "timestamp": null,
-  "note": "Test transaction"
+  "timestamp": "2026-07-09T10:00:00",
+  "note": "Test transaction",
+  "labels": ["defi", "stablecoin"]
 }
 ```
 
@@ -250,6 +275,7 @@ http://127.0.0.1:8000/docs
   "message": "Transaction summary generated successfully",
   "wallet_address": null,
   "category": null,
+  "label": null,
   "total_transactions": 2,
   "total_amount": 350.75,
   "total_value_usd": 350.75,
@@ -257,6 +283,10 @@ http://127.0.0.1:8000/docs
   "largest_transaction_value_usd": 250.75,
   "categories": {
     "swap": 2
+  },
+  "labels": {
+    "defi": 2,
+    "stablecoin": 1
   }
 }
 ```
@@ -299,3 +329,4 @@ http://127.0.0.1:8000/docs
 - [Sprint 2 Review](docs/sprint-2.md)
 - [Sprint 3 Review](docs/sprint-3.md)
 - [Sprint 4 Review](docs/sprint-4.md)
+- [Sprint 5 Review](docs/sprint-5.md)

@@ -16,3 +16,4 @@ class Transaction(Base):
     value_usd = Column(Float, nullable=True)
     timestamp = Column(DateTime, nullable=True)
     note = Column(String, nullable=True)
+    labels = Column(String, nullable=False, default="")

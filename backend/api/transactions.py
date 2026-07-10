@@ -8,11 +8,20 @@ from backend.models.transaction import Transaction
 from backend.schemas.transaction import (
     TransactionCategoryUpdate,
     TransactionCreate,
+    TransactionLabelsUpdate,
     TransactionNoteUpdate,
     TransactionResponse,
 )
 
-from backend.services.transaction_service import normalize_category
+from backend.services.transaction_service import (
+    ALLOWED_LABELS,
+    labels_from_storage,
+    labels_to_storage,
+    normalize_category,
+    normalize_labels,
+    suggest_transaction_labels,
+    transaction_to_response,
+)
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
@@ -21,6 +30,7 @@ router = APIRouter(prefix="/transactions", tags=["transactions"])
 def create_transaction(transaction_data: TransactionCreate, db: Session = Depends(get_db)):
     transaction_dict = transaction_data.model_dump()
     transaction_dict["category"] = normalize_category(transaction_dict["category"])
+    transaction_dict["labels"] = labels_to_storage(transaction_dict["labels"])
 
     new_transaction = Transaction(**transaction_dict)
 
@@ -28,13 +38,14 @@ def create_transaction(transaction_data: TransactionCreate, db: Session = Depend
     db.commit()
     db.refresh(new_transaction)
 
-    return new_transaction
+    return transaction_to_response(new_transaction)
 
 
 @router.get("", response_model=List[TransactionResponse])
 def list_transactions(
     wallet_address: Optional[str] = None,
     category: Optional[str] = None,
+    label: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     query = db.query(Transaction)
@@ -43,14 +54,26 @@ def list_transactions(
         query = query.filter(Transaction.wallet_address == wallet_address)
 
     if category:
-        query = query.filter(Transaction.category == category)
+        query = query.filter(Transaction.category == normalize_category(category))
 
-    return query.all()
+    transactions = query.all()
+
+    if label:
+        normalized_label = normalize_labels([label])[0]
+        transactions = [
+            transaction
+            for transaction in transactions
+            if normalized_label in labels_from_storage(transaction.labels)
+        ]
+
+    return [transaction_to_response(transaction) for transaction in transactions]
+
 
 @router.get("/summary")
 def get_transaction_summary(
     wallet_address: Optional[str] = None,
     category: Optional[str] = None,
+    label: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     query = db.query(Transaction)
@@ -59,14 +82,25 @@ def get_transaction_summary(
         query = query.filter(Transaction.wallet_address == wallet_address)
 
     if category:
-        query = query.filter(Transaction.category == category)
+        query = query.filter(Transaction.category == normalize_category(category))
 
     transactions = query.all()
+
+    normalized_label = None
+
+    if label:
+        normalized_label = normalize_labels([label])[0]
+        transactions = [
+            transaction
+            for transaction in transactions
+            if normalized_label in labels_from_storage(transaction.labels)
+        ]
 
     total_value_usd = 0
     total_amount = 0
     largest_transaction_value_usd = 0
     categories = {}
+    labels = {}
 
     for transaction in transactions:
         if transaction.value_usd:
@@ -84,6 +118,12 @@ def get_transaction_summary(
 
         categories[category_name] = categories[category_name] + 1
 
+        for label_name in labels_from_storage(transaction.labels):
+            if label_name not in labels:
+                labels[label_name] = 0
+
+            labels[label_name] = labels[label_name] + 1
+
     average_value_usd = 0
 
     if len(transactions) > 0:
@@ -98,13 +138,21 @@ def get_transaction_summary(
         "message": message,
         "wallet_address": wallet_address,
         "category": category,
+        "label": normalized_label,
         "total_transactions": len(transactions),
         "total_amount": round(total_amount, 6),
         "total_value_usd": round(total_value_usd, 2),
         "average_value_usd": round(average_value_usd, 2),
         "largest_transaction_value_usd": round(largest_transaction_value_usd, 2),
         "categories": categories,
+        "labels": labels,
     }
+
+
+@router.get("/labels/options")
+def get_transaction_label_options():
+    return {"labels": sorted(ALLOWED_LABELS)}
+
 
 @router.get("/{transaction_id}", response_model=TransactionResponse)
 def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
@@ -113,7 +161,27 @@ def get_transaction(transaction_id: int, db: Session = Depends(get_db)):
     if transaction is None:
         raise HTTPException(status_code=404, detail="Transaction not found")
 
-    return transaction
+    return transaction_to_response(transaction)
+
+
+@router.get("/{transaction_id}/labels/suggestions")
+def get_transaction_label_suggestions(transaction_id: int, db: Session = Depends(get_db)):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+    if transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    labels = suggest_transaction_labels(
+        transaction.category,
+        transaction.token_symbol,
+        transaction.value_usd,
+    )
+
+    return {
+        "transaction_id": transaction.id,
+        "suggested_labels": labels,
+    }
+
 
 @router.patch("/{transaction_id}/note", response_model=TransactionResponse)
 def update_transaction_note(
@@ -130,7 +198,8 @@ def update_transaction_note(
     db.commit()
     db.refresh(transaction)
 
-    return transaction
+    return transaction_to_response(transaction)
+
 
 @router.patch("/{transaction_id}/category", response_model=TransactionResponse)
 def update_transaction_category(
@@ -147,7 +216,26 @@ def update_transaction_category(
     db.commit()
     db.refresh(transaction)
 
-    return transaction
+    return transaction_to_response(transaction)
+
+
+@router.patch("/{transaction_id}/labels", response_model=TransactionResponse)
+def update_transaction_labels(
+    transaction_id: int,
+    label_data: TransactionLabelsUpdate,
+    db: Session = Depends(get_db),
+):
+    transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+
+    if transaction is None:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    transaction.labels = labels_to_storage(label_data.labels)
+    db.commit()
+    db.refresh(transaction)
+
+    return transaction_to_response(transaction)
+
 
 @router.delete("/{transaction_id}")
 def delete_transaction(transaction_id: int, db: Session = Depends(get_db)):
